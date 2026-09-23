@@ -69,9 +69,19 @@ in at least 4 of 5 tries.
        - "No chunk is shorter than 200 characters, since anything below that
           in my corpus turned out to be a heading with no content under it." -->
 
-
+For at least 4 of the 5 chunks printed by `python app.py chunks -n 5`, the
+chunk stays within a single heading's section. It doesn't mix content from
+two sections, and it doesn't cut off mid-sentence at either edge.
 
 **Why this target:**
+The starter's fixed 800-character chunker already produced a 24-character
+chunk (almost certainly a bare heading) and repeatedly hit the 800-character
+cap. In guides organized by heading, that's a sign the fixed size ignores
+section boundaries. I'm not requiring 5 of 5 because a short section like
+"getting there" (sometimes under 200 characters on its own) may end up
+merged with its neighbor no matter how I tune this, and I'd rather know that
+than pretend a perfect score is realistic.
+
 
 
 
@@ -89,7 +99,23 @@ in at least 4 of 5 tries.
 
 
 
+For at least 4 of my 5 test questions, every document the answer cites
+actually contains the fact the answer attributes to it - checked by opening
+the cited file and confirming the claim is really in there. (A question
+about Marchwood's trams citing `guide_marchwood.md` or
+`guide_regional_transport.md` both pass, since both guides really do cover
+it; citing `guide_eating.md` for that fact would fail, since that file says
+nothing about trams.)
+
 **Why this target:**
+Several of my questions are covered by more than one guide, so there's
+often no single "correct" source but there are files that clearly don't
+contain the fact, and citing one of those would actively mislead someone.
+I'm not requiring 5 of 5 because one of my questions (the bus-ticket one)
+pulls from a paragraph that mixes two operators' info, and I could see the
+model attributing it to a source that mentions the topic but not that exact
+detail.
+
 
 
 
