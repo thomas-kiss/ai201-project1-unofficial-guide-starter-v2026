@@ -27,8 +27,12 @@ CORPUS = os.getenv("AI201_CORPUS", "city_guides")
 # These are deliberately plain, generic numbers. Milestone 3 is where you
 # replace them with numbers that fit the documents you actually read.
 
-CHUNK_SIZE = 800        # characters per chunk
-CHUNK_OVERLAP = 120     # characters shared between neighbouring chunks
+# These fit city_guides specifically: 84 `##`-headed sections across 14 guides
+# range from 174 to 709 characters (median 295). The chunker below splits on
+# headings first, so CHUNK_SIZE below is a safety cap for the rare oversized
+# section rather than the primary rule — nothing in this corpus hits it today.
+CHUNK_SIZE = 900        # characters per chunk (cap, only used on an over-long section)
+CHUNK_OVERLAP = 120     # characters shared between pieces of a split section
 
 
 # ─── Retrieval (Milestone 4) ─────────────────────────────────────────────────

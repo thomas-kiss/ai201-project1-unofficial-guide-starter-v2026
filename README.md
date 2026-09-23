@@ -31,53 +31,81 @@
 
 ## Chunking Strategy
 
-**Chunk size:**
-**Overlap:**
+**Chunk size:** 900 characters (a safety cap, not the primary rule — see below)
+**Overlap:** 120 characters (only used when the cap actually splits a section)
 
-<!-- What about YOUR documents made you pick these numbers? Short posts and
-     long sectioned guides don't want the same chunking, and "800 seemed
-     reasonable" earns nothing. Point at something you noticed when you read
-     the documents in Milestone 1.
+`city_guides` documents aren't split by character count — they're split on
+`##` section headings (Getting there, Eating, Where to stay, When to go...).
+Reading the guides in Milestone 1 showed each section is written as one
+complete, self-contained thought. Measuring it confirmed that: 84 sections
+across the 14 guides run 174 to 709 characters (median 295, average 313). A
+fixed window either merges two unrelated sections into one chunk or slices
+through the middle of one — both make chunks that answer every question a
+little and none of them well. Splitting on the heading instead means a chunk
+about "eating" never drags in "getting there."
 
-     If you changed your mind partway through, say so and say why. That's worth
-     more than pretending you got it right first time.
+`CHUNK_SIZE` (900) exists only as a cap for a section that runs unusually
+long — nothing in this corpus is long enough to trigger it today, but a
+future oversized section shouldn't silently become one giant chunk. If the
+cap ever fires, `CHUNK_OVERLAP` (120) keeps a sentence at the cut point from
+being orphaned between the two pieces.
 
-     Milestone 3. -->
+**I changed my mind partway through.** My first version split on headings but
+kept the text before the first heading as its own chunk whenever it existed.
+That worked for guides with a real intro paragraph, but four cross-cutting
+guides (`guide_walking.md`, `guide_eating.md`, `guide_seasons.md`,
+`guide_regional_transport.md`) have no intro at all — just a title line like
+`# Walking in the region` — so indexing produced four 23–27 character chunks
+that were pure fragments, nothing anyone could answer a question from. I
+fixed it by merging any pre-heading text under 40 characters into the first
+section instead of emitting it alone. After the fix the shortest chunk in the
+corpus is 174 characters (a real section) and the shortest is no longer a
+bare title.
 
 ## Sample Chunks
 
-<!-- Five chunks, pasted as text. Label each one and name the file it came from
-     AND the function that produced it — the grader checks your code against
-     what you claim here.
+Chunks below are from `python app.py chunks -n 5`, produced by
+`chunker.py::split_documents`.
 
-     `python app.py chunks -n 5` prints all three for you. Copy them straight
-     across.
-
-     Milestone 3. -->
-
-**Chunk 1** — source: `` — produced by: ``
+**Chunk 1** — source: `guide_accessibility.md#0` — produced by: `chunker.py::split_documents`
 
 ```
+# Getting around the region with limited mobility
+
+An honest assessment rather than a promotional one. Some of these places are
+difficult and it is better to know in advance.
 ```
 
-**Chunk 2** — source: `` — produced by: ``
+**Chunk 2** — source: `guide_corry_vale.md#5` — produced by: `chunker.py::split_documents`
 
 ```
+## Where to stay
+
+Perhaps thirty beds in the entire valley, spread across two pubs and a handful of farmhouse rooms. In summer these are booked months ahead. Camping is permitted on two marked fields and nowhere else.
 ```
 
-**Chunk 3** — source: `` — produced by: ``
+**Chunk 3** — source: `guide_givens_mill.md#2` — produced by: `chunker.py::split_documents`
 
 ```
+## Getting around
+
+Everything is on one street along the river. The mill is at one end and the church at the other, eight minutes apart. The riverside path continues in both directions for as far as you want to walk.
 ```
 
-**Chunk 4** — source: `` — produced by: ``
+**Chunk 4** — source: `guide_kestrelford.md#4` — produced by: `chunker.py::split_documents`
 
 ```
+## What to see
+
+The market square on a Saturday morning is the main event and has run continuously since the 1400s. The parish church has a 13th-century tower you can climb for £2. The old trackbed walk runs six miles to the next village along an easy gradient and is the best half-day here.
 ```
 
-**Chunk 5** — source: `` — produced by: ``
+**Chunk 5** — source: `guide_pellew_sands.md#6` — produced by: `chunker.py::split_documents`
 
 ```
+## When to go
+
+June and September for the beach without the crowds. July and August are busy and the town is at its most itself, for better and worse. Winter is bleak, largely closed, and has a following among people who like that sort of thing.
 ```
 
 ## Sample Answer
