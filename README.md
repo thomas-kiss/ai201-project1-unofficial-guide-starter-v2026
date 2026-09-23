@@ -27,9 +27,21 @@
 
      Milestone 5. -->
 
+The Unofficial Guide answers questions about `city_guides`, a corpus of 14 travel guides covering nine towns and five topics (eating, walking, regional transport, seasons, accessibility). It retrieves the most relevant sections from those guides for a plain-language question, checks that the match is a confident and then writes a short answer grounded only in what it retrieved (RAG), naming the guide the answer came from. It will not guess when a question falls outside what these guides cover.
+
 
 
 ## Chunking Strategy
+
+<!-- What about YOUR documents made you pick these numbers? Short posts and
+     long sectioned guides don't want the same chunking, and "800 seemed
+     reasonable" earns nothing. Point at something you noticed when you read
+     the documents in Milestone 1.
+
+     If you changed your mind partway through, say so and say why. That's worth
+     more than pretending you got it right first time.
+
+     Milestone 3. -->
 
 **Chunk size:** 900 characters (a safety cap, not the primary rule — see below)
 **Overlap:** 120 characters (only used when the cap actually splits a section)
@@ -63,6 +75,15 @@ corpus is 174 characters (a real section) and the shortest is no longer a
 bare title.
 
 ## Sample Chunks
+
+<!-- Five chunks, pasted as text. Label each one and name the file it came from
+     AND the function that produced it — the grader checks your code against
+     what you claim here.
+
+     `python app.py chunks -n 5` prints all three for you. Copy them straight
+     across.
+
+     Milestone 3. -->
 
 Chunks below are from `python app.py chunks -n 5`, produced by
 `chunker.py::split_documents`.
@@ -110,6 +131,9 @@ June and September for the beach without the crowds. July and August are busy an
 
 ## Sample Answer
 
+<!-- One complete question and answer, pasted as text, with the source line
+     visible. Milestone 4. -->
+
 **Question:** Do bus tickets work between different companies?
 
 **Answer:**
@@ -126,7 +150,18 @@ my cutoff. At the starter's default threshold (0.6) the gate refused it. Tehe be
 distance was 0.662 - Raising the cutoff to 0.73 let it through without letting any
 out-of-scope question in.
 
-**My relevance cutoff:** 0.73 (`config.py`, `THRESHOLD`)
+**My relevance cutoff:**
+
+<!-- The number you set in config.py, and how you got there.
+
+     You ran five questions your corpus covers and the five in OUT_OF_SCOPE
+     that it clearly doesn't, and wrote down the best distance for each. What
+     did those two groups look like? Where was the gap? Put the actual numbers
+     here — the table below wants all ten rows.
+
+     Milestone 4. -->
+
+0.73 (`config.py`, `THRESHOLD`)
 
 I ran my 5 in-corpus questions and the 5 `OUT_OF_SCOPE` questions and recorded
 the best (lowest) distance for each:
@@ -159,6 +194,8 @@ room to be refused even if it happens to share a few words with the corpus.
      "I used AI to help me code" is not.
 
      Milestone 5. -->
+
+I used AI to pressure test criterion. I used claude to help define a good chunk size/overlap for the chosen corpora as well as to implement the split_documents function. After ID a bug I had it rewrite to merge a short preheading text into the first tection. I also used claude to measure best distances when looking at the relevance cutoffs.
 
 **1.**
 
