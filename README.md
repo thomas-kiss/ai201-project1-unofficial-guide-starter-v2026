@@ -110,30 +110,44 @@ June and September for the beach without the crowds. July and August are busy an
 
 ## Sample Answer
 
-<!-- One complete question and answer, pasted as text, with the source line
-     visible. Milestone 4. -->
-
-**Question:**
+**Question:** Do bus tickets work between different companies?
 
 **Answer:**
 
 ```
+No, bus tickets do not work between different companies; the three regional
+operators do not accept each other's tickets.
+
+Source: guide_regional_transport.md
 ```
 
-**My relevance cutoff:**
+This one is worth showing specifically because it's the question that changed
+my cutoff. At the starter's default threshold (0.6) the gate refused it. Tehe best
+distance was 0.662 - Raising the cutoff to 0.73 let it through without letting any
+out-of-scope question in.
 
-<!-- The number you set in config.py, and how you got there.
+**My relevance cutoff:** 0.73 (`config.py`, `THRESHOLD`)
 
-     You ran five questions your corpus covers and the five in OUT_OF_SCOPE
-     that it clearly doesn't, and wrote down the best distance for each. What
-     did those two groups look like? Where was the gap? Put the actual numbers
-     here — the table below wants all ten rows.
-
-     Milestone 4. -->
+I ran my 5 in-corpus questions and the 5 `OUT_OF_SCOPE` questions and recorded
+the best (lowest) distance for each:
 
 | Question | In corpus? | Best distance |
 |---|---|---|
-|  |  |  |
+| Is Halden Bay busy in the summer | Yes | 0.183 |
+| What's a short walking path close to Brightwater? | Yes | 0.255 |
+| What is the name of the walking route near Kestrelford | Yes | 0.288 |
+| What's the best time to visit Brightwater | Yes | 0.354 |
+| Do bus tickets work between different companies? | Yes | 0.662 |
+| What is the capital of Mongolia? | No | 0.803 |
+| How do I write a for loop in Rust? | No | 0.813 |
+| What is the recommended dosage of ibuprofen for a headache? | No | 0.846 |
+| How do I change the oil in a diesel engine? | No | 0.892 |
+| Who won the 1994 World Cup? | No | 0.975 |
+
+The two groups separated cleanly: in-corpus topped out at 0.662, out-of-scope
+started at 0.803. I put the cutoff at 0.73 — roughly the midpoint of that gap,
+closer to the out-of-scope side so a genuinely unrelated question still has
+room to be refused even if it happens to share a few words with the corpus.
 
 ## How I Used AI
 
