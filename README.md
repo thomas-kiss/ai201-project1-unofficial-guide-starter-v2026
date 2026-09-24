@@ -228,15 +228,61 @@ I used AI to pressure test criterion. I used claude to help define a good chunk 
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
+| 4. Chunks stay within one heading's section | 4 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
+| 5. Cited source actually contains the fact | 4 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
 
 <!-- Underneath, paste the REAL output for each criterion from one of your
      runs — the actual text your system produced, not a description of it.
      Name the file and function that produced it. -->
+
+Criterion 1 — store.py::search, python app.py ask "..." --show-prompt. For "Is Halden Bay busy in the summer" (expects: "very busy"), the retrieved chunk actually contains it, split across a line wrap in the source:
+
+[from guide_seasons.md]
+## Summer, June to August
+
+June is excellent everywhere. July and August split: Halden Bay becomes very
+busy and the parking problem dominates, Kestrelford fills with walkers, and
+Brightwater goes quiet to the point of dullness with the university empty.
+
+Criterion 2 — real answers from results/run_2026-09-23_1807_before.md, produced by generate.py::answer_from_chunks:
+
+According to guide_seasons.md, late May is arguably the best week of the
+year to visit Brightwater because it features long days, everything running,
+and the students gone.
+
+No, bus tickets do not work between different companies; the three operators
+in the region do not accept each other's tickets (guide_regional_transport.md).
+
+Criterion 3 — run_eval.py::check_out_of_scope, cutoff 0.73:
+
+Out-of-scope questions (the gate should refuse these):
+  refused  (best distance 0.803)  What is the capital of Mongolia?
+  refused  (best distance 0.892)  How do I change the oil in a diesel engine?
+  refused  (best distance 0.975)  Who won the 1994 World Cup?
+  refused  (best distance 0.846)  What is the recommended dosage of ibuprofen for a headache?
+  refused  (best distance 0.813)  How do I write a for loop in Rust?
+  -> gate refused 5 of 5
+
+Criterion 4 — python app.py chunks -n 5, chunker.py::split_documents:
+
+Chunk 4  |  source: guide_kestrelford.md#4  |  produced by: chunker.py::split_documents
+## What to see
+
+The market square on a Saturday morning is the main event and has run
+continuously since the 1400s. The parish church has a 13th-century tower you
+can climb for £2. The old trackbed walk runs six miles to the next village
+along an easy gradient and is the best half-day here.
+
+Criterion 5 — verified by grepping each cited source file for the exact claim the answer attributed to it:
+
+guide_regional_transport.md:16:Three operators run in the region and they do
+not accept each other's tickets,
+
+That's the source guide_regional_transport.md cited for "No, bus tickets do
+not work between different companies" — the fact is really there.
 
 ## Verdicts
 
