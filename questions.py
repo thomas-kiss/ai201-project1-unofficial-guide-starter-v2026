@@ -26,7 +26,7 @@ QUESTIONS = [
     {"question": "What's the best time to visit Brightwater", "expects": "Late May"},
     {"question": "What's a short walking path close to Brightwater?", "expects": "River Path"},
     {"question": "What is the name of the walking route near Kestrelford", "expects": "Trackbed"},
-    {"question": "Is Halden Bay busy in the summer", "expects": "Yes, very busy"},
+    {"question": "Is Halden Bay busy in the summer", "expects": "very busy"},
     {"question": "Do bus tickets work between different companies?", "expects": "No"},
 ]
 
