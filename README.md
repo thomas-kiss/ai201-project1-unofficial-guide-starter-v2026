@@ -297,11 +297,11 @@ not work between different companies" — the fact is really there.
 
 | # | Criterion | Verdict | How I decided |
 |---|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
-| 4 |  |  |  |
-| 5 |  |  |  |
+| 1 | Retrieved chunk contains the answer (4 of 5) | MET | I checked all 5 questions by hand with `app.py ask --show-prompt` and read the full retrieved chunks, not just the previews. All 5 had the expects phrase in at least one chunk, including a near-miss where the phrase was split across a line wrap in the source file. |
+| 2 | Every answer names a source (5 of 5) | MET | I read all 15 real answers (5 questions × 3 runs) in the run log and every one named a `guide_*.md` file, so this held for every run, not just on average. |
+| 3 | Gate stops out-of-corpus questions (4 of 5) | MET | All 5 `OUT_OF_SCOPE` questions were refused, every run — but see Diagnoses below, since these questions were easier to refuse than they should have been. |
+| 4 | Chunks stay within one heading's section (4 of 5) | MET | 5 of 5 sampled chunks were self-contained and didn't mix sections. One (a pre-heading title/intro, not under any `##`) was a genuine judgment call, but it didn't cut off mid-sentence or mix two sections either, so I counted it as a pass under my own criterion's literal wording. |
+| 5 | Cited source actually contains the fact (4 of 5) | MET | I grepped each cited file for the exact fact the answer attributed to it, for all 5 questions. All 5 checked out. |
 
 ## Diagnoses
 
@@ -322,6 +322,24 @@ not work between different companies" — the fact is really there.
      low, and which one you'd tighten and to what.
 
      Milestone 3. -->
+
+I missed nothing. All five criteria came out MET, most with real margin (5 of
+5 against targets of 4 of 5). That's a sign my targets were safe, not that
+the system is excellent — a system that clears every criterion on the first
+try usually means the test wasn't hard enough, not that nothing is wrong.
+
+The criterion I'd tighten is #3, the relevance gate. My `OUT_OF_SCOPE`
+questions (capital of Mongolia, changing diesel oil, the 1994 World Cup,
+ibuprofen dosage, a Rust for-loop) are wildly unrelated to travel guides —
+their best distances came out at 0.803–0.975, nowhere near my 0.73 cutoff.
+That tests whether the gate can tell "travel guide" from "a completely
+different universe," which is the easy version of the problem. It never
+tests the actual edge case that matters: a question that's travel-shaped but
+about something this specific corpus doesn't cover — a town or topic not in
+the region, or a real town in the region but a detail (like hostels) that
+guide doesn't mention. I'd replace the five questions with near-misses like
+that and see if the gate still holds at 4 of 5, or whether 0.73 is only
+comfortable because I never gave it a genuinely hard case.
 
 ## The Improvement
 
