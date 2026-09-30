@@ -324,31 +324,26 @@ not work between different companies" — the fact is really there.
      Milestone 3. -->
 
 I missed nothing. All five criteria came out MET, most with real margin (5 of
-5 against targets of 4 of 5). That's a sign my targets were safe, not that
-the system is excellent — a system that clears every criterion on the first
-try usually means the test wasn't hard enough, not that nothing is wrong.
+5 against targets of 4 of 5). That's a sign my targets were likely toosafe, not that the system is great.
 
 The criterion I'd tighten is #3, the relevance gate. My `OUT_OF_SCOPE`
 questions (capital of Mongolia, changing diesel oil, the 1994 World Cup,
-ibuprofen dosage, a Rust for-loop) are wildly unrelated to travel guides —
-their best distances came out at 0.803–0.975, nowhere near my 0.73 cutoff.
+ibuprofen dosage, a Rust for-loop) are wildly unrelated to travel guides. The best distances came out at 0.803–0.975, nowhere near my 0.73 cutoff.
 That tests whether the gate can tell "travel guide" from "a completely
 different universe," which is the easy version of the problem. It never
-tests the actual edge case that matters: a question that's travel-shaped but
-about something this specific corpus doesn't cover — a town or topic not in
-the region, or a real town in the region but a detail (like hostels) that
-guide doesn't mention. I'd replace the five questions with near-misses like
-that and see if the gate still holds at 4 of 5, or whether 0.73 is only
-comfortable because I never gave it a genuinely hard case.
+tests the actual edge case that matters: a question that's travel-shaped but about something this specific corpus doesn't cover. a town or topic not in the region. I'd replace the five questions with near-misses to see if the gate still holds at 4 of 5, or whether 0.73 is only comfortable because I gave it easy cases.
 
 ## The Improvement
 
 **What I changed:**
 
+I lowered THRESHOLD in config.py from 0.73 to 0.38
+
 **Why I picked it:**
 
 <!-- Connect it to a specific diagnosis above in one sentence. If you can't,
      you picked a fix because it sounded impressive. -->
+My diagnosis found that the gate let all 5 near miss out of scope questions through. 0.38 is closer to the reliable in-scope questions
 
 ### Run Log — After
 
@@ -357,11 +352,11 @@ comfortable because I never gave it a genuinely hard case.
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
+| 2. Every answer names a source | 5 of 5 | 4 of 5 | 4 of 5 | 4 of 5 | MISSED |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
+| 4. Chunks stay within one heading's section | 4 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | MET |
+| 5. Cited source actually contains the fact | 4 of 5 | 4 of 5 | 4 of 5 | 4 of 5 | MET |
 
 **Did it help?**
 
@@ -371,6 +366,7 @@ comfortable because I never gave it a genuinely hard case.
      tell.
 
      Milestone 4. -->
+It fixed criterion 3 but broke criterion 2 (previously working). I would say its acceptable but not a great or complete fix
 
 ## What's Still Broken
 
@@ -381,6 +377,7 @@ comfortable because I never gave it a genuinely hard case.
      not.
 
      Milestone 5. -->
+     Criterion 2 (4/5 after 'fix') Not sure what could be done. Perhaps a hybrid search.
 
 ## What I'd Do Differently
 
@@ -388,3 +385,6 @@ comfortable because I never gave it a genuinely hard case.
      differently, and why?
 
      Milestone 5. -->
+
+     Write the out of scope questions a snear-miss instead of such wildly unrelated questions.
+

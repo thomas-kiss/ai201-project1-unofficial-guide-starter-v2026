@@ -44,12 +44,15 @@ TOP_K = 5               # how many chunks to pull back per question
 #
 # LOWER IS BETTER: 0.3 is a close match, 0.9 is unrelated.
 #
-# Measured on city_guides: best distances for my 5 in-scope questions ran
-# 0.183-0.662; my 5 OUT_OF_SCOPE questions ran 0.803-0.975. The starter's 0.6
-# default sat inside the in-scope group and wrongly refused a question my
-# corpus actually answers (0.662). 0.73 sits in the real gap between the two
-# groups instead.
-THRESHOLD = 0.73
+# Unit 2 revision: 0.73 was tuned against easy OUT_OF_SCOPE questions (wildly
+# unrelated topics, 0.803-0.975) and missed genuine near-misses entirely -
+# questions about real gaps in this corpus (hostels, vegan food, nightlife,
+# wifi, currency) scored 0.402-0.651, all under 0.73, so the gate let all 5
+# through. 0.38 sits in the gap between my reliable in-scope questions
+# (0.183-0.354) and that near-miss cluster. Trade-off: my hardest in-scope
+# question ("Do bus tickets work between different companies?", 0.662) now
+# falls outside the cutoff too and gets wrongly refused.
+THRESHOLD = 0.38
 
 
 # ─── Models ──────────────────────────────────────────────────────────────────
